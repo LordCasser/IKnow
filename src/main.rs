@@ -97,7 +97,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // create app and run it
-    let tick_rate = Duration::from_millis(30000);
+    let tick_rate = Duration::from_secs(60);
     let app = App::new();
     let res = run_app(&mut terminal, app, tick_rate);
 
@@ -127,7 +127,7 @@ fn run_app<B: Backend>(
         terminal.draw(|f| ui(f, &app))?;
 
         let timeout = tick_rate.saturating_sub(last_tick.elapsed());
-        if crossterm::event::poll(timeout)? {
+        if event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
                 if let KeyCode::Char('q') = key.code {
                     return Ok(());
@@ -154,11 +154,16 @@ fn ui(f: &mut Frame, app: &App) {
     let text = app.get_data();
 
     let mut lines = vec![];
-    // println!("{:?}", text);
+    let mut  counter = 0;
     for line in text {
-        lines.push(line.into());
+        counter = counter + 1;
+        if counter < 10 {
+            lines.push((counter.to_string()+".  "+&line).into());
+            continue
+        }
+        lines.push((counter.to_string()+". "+&line).into());
     }
-    // println!("{:?}", lines);
+
     let create_block = |title| {
         Block::default()
             .borders(Borders::ALL)
@@ -170,7 +175,8 @@ fn ui(f: &mut Frame, app: &App) {
     };
 
     let paragraph = Paragraph::new(lines)
-        .gray()
-        .block(create_block(app.get_page()));
+        .style(Style::default().fg(Color::Gray))
+        .block(create_block(app.get_page())).alignment(Alignment::Left)
+        .wrap(Wrap { trim: true });
     f.render_widget(paragraph, layout[0]);
 }
