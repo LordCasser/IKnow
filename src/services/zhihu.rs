@@ -1,5 +1,5 @@
-use std::fmt::Error;
-use serde_json::{Result, Value};
+
+use serde_json::{Value};
 
 
 pub(crate) struct SearchResult {

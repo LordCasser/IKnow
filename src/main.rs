@@ -1,12 +1,11 @@
 mod services;
 
-use ratatui::prelude::Line;
+
 
 use std::string::String;
-use std::io::{self, stdout};
+use std::io::{self};
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind},
-    ExecutableCommand,
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen}
 };
@@ -16,11 +15,11 @@ use crate::services::weibo::WeiboResult;
 use crate::services::zhihu::{QuestionResult, SearchResult};
 use std::{error::Error};
 use std::time::{Duration, Instant};
-use ratatui::{prelude::*, widgets::*};
+
 use ratatui::style::Stylize;
 
-use ratatui::{prelude::*, widgets::*};
-use log::log;
+
+
 
 struct App {
     state: TableState,
